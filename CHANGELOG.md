@@ -21,3 +21,7 @@
 ### Changed
 - **Server Config**: Updated `start.bat` to enforce `development` mode for local testing.
 - **Database**: Added `active_games` table to schema to fix crash on game start.
+- **UI**: Updated chat timestamp format to 24h (HH:mm).
+
+
+

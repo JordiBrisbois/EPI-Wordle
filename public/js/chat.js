@@ -86,7 +86,7 @@ export class Chat {
             <div class="chat-message ${isSystem ? 'system' : ''}" data-id="${msg.id}">
                 <div class="chat-header-line">
                     <span class="chat-user">${msg.username}</span>
-                    <span class="chat-time">${new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span class="chat-time">${new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
                     ${canDelete && !isSystem ? `<button class="chat-delete-btn" onclick="window.deleteChatMessage('${msg.id}')" title="Supprimer">×</button>` : ''}
                 </div>
                 <span class="chat-text">${this.escapeHtml(msg.message)}</span>
