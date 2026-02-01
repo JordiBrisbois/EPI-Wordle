@@ -3,7 +3,11 @@
 ## [1.1.0] - 2026-02-01
 
 ### Added
-- **Admin Roles**: First registered user is automatically assigned 'admin' role.
+- **Security**: Added CORS middleware to control cross-origin access.
+- **Configuration**: Integrated `dotenv` to load environment variables from `.env` file.
+- **Documentation**: Added `.env.example` for secure secret management.
+
+### Admin Roles
 - **Chat Moderation**: Admins can now delete any message. Users can delete their own.
 - **System Messages**: Added "Bon jeu a tous !" welcome message on server start.
 - **Real-time Stats**: Profile stats now refresh automatically when opening the profile view.

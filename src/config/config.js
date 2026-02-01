@@ -1,4 +1,6 @@
 const path = require('path');
+require('dotenv').config(); // Load environment variables from .env file
+
 
 const CONFIG = {
     PORT: process.env.PORT || 3000,
