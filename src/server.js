@@ -9,7 +9,7 @@ app.listen(CONFIG.PORT, () => {
     console.log('Server: http://localhost:' + CONFIG.PORT);
 
     // Add system message to chat
-    chatController.addSystemMessage('Serveur EPI-Wordle redemarre ! Bon jeu a tous !');
+    chatController.addSystemMessage('Bon jeu a tous !');
 
     // Display local IP addresses
     const interfaces = os.networkInterfaces();

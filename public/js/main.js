@@ -170,9 +170,13 @@ class App {
         }
     }
 
-    showProfile() {
+    async showProfile() {
         const div = document.getElementById('user-info');
         const stats = document.getElementById('user-stats');
+
+        // Refresh user data before showing
+        await this.checkAuth();
+
         document.getElementById('auth-forms').style.display = 'none';
         div.style.display = 'block';
 

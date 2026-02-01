@@ -159,13 +159,13 @@ export class Game {
         // Add Enter and Backspace
         const enter = document.createElement('button');
         enter.textContent = '↵';
-        enter.className = 'key key-wide';
+        enter.className = 'key key-wide key-enter';
         enter.onclick = () => this.handleInput('Enter');
         rowDiv.insertBefore(enter, rowDiv.firstChild);
 
         const back = document.createElement('button');
         back.textContent = '⌫';
-        back.className = 'key key-wide';
+        back.className = 'key key-wide key-back';
         back.onclick = () => this.handleInput('Backspace');
         rowDiv.appendChild(back);
       }

@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
+  role TEXT DEFAULT 'user',
   total_games INTEGER DEFAULT 0,
   total_wins INTEGER DEFAULT 0,
   current_streak INTEGER DEFAULT 0,
@@ -36,6 +37,20 @@ CREATE TABLE IF NOT EXISTS games (
   won BOOLEAN DEFAULT 0,
   attempts INTEGER DEFAULT 0,
   guesses TEXT DEFAULT '[]',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+`;
+
+// Create active_games table
+const createActiveGamesTable = `
+CREATE TABLE IF NOT EXISTS active_games (
+  id TEXT PRIMARY KEY,
+  user_id INTEGER,
+  target_word TEXT NOT NULL,
+  original_word TEXT NOT NULL,
+  guesses TEXT DEFAULT '[]',
+  is_game_over BOOLEAN DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -89,6 +104,17 @@ async function initDatabase() {
         if (err) reject(err);
         else {
           console.log('Table games creee');
+          resolve();
+        }
+      });
+    });
+
+    // Create active_games table
+    await new Promise((resolve, reject) => {
+      db.exec(createActiveGamesTable, (err) => {
+        if (err) reject(err);
+        else {
+          console.log('Table active_games creee');
           resolve();
         }
       });

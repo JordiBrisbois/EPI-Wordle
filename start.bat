@@ -88,6 +88,7 @@ echo.
 echo ============================================
 echo.
 
+set NODE_ENV=development
 npm start
 
 if errorlevel 1 (

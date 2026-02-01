@@ -26,6 +26,7 @@ exports.sendMessage = (req, res) => {
     }
 
     const chatMessage = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
         username: req.user.username,
         message: trimmedMessage,
         timestamp: new Date().toISOString()
@@ -50,14 +51,21 @@ exports.clearMessages = (req, res) => {
 };
 
 exports.deleteMessage = (req, res) => {
-    const index = parseInt(req.params.index);
-    if (index >= 0 && index < chatMessages.length) {
-        const msg = chatMessages[index];
-        if (msg.username === req.user.username) {
-            chatMessages.splice(index, 1);
+    const id = req.params.id; // Correct param name matching route
+    console.log('Attempting delete. ID requested:', id);
+    console.log('Available IDs:', chatMessages.map(m => m.id));
+
+    const msgIndex = chatMessages.findIndex(m => m.id === id);
+
+    if (msgIndex !== -1) {
+        const msg = chatMessages[msgIndex];
+
+        // Allow if owner OR admin
+        if (msg.username === req.user.username || req.user.role === 'admin') {
+            chatMessages.splice(msgIndex, 1);
             res.json({ success: true, message: 'Message deleted' });
         } else {
-            res.status(403).json({ error: 'Unauthorized - can only delete own messages' });
+            res.status(403).json({ error: 'Unauthorized' });
         }
     } else {
         res.status(404).json({ error: 'Message not found' });
@@ -67,6 +75,7 @@ exports.deleteMessage = (req, res) => {
 // Internal method to add system messages
 exports.addSystemMessage = (text) => {
     chatMessages.push({
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
         username: 'System',
         message: text,
         timestamp: new Date().toISOString()

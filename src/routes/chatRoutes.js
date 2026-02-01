@@ -9,6 +9,6 @@ router.get('/messages', chatController.getMessages);
 // Private
 router.post('/send', authenticateToken, chatController.sendMessage);
 router.post('/clear', authenticateToken, chatController.clearMessages);
-router.delete('/message/:index', authenticateToken, chatController.deleteMessage);
+router.delete('/delete/:id', authenticateToken, chatController.deleteMessage);
 
 module.exports = router;

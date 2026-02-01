@@ -18,18 +18,22 @@ exports.register = async (req, res) => {
         return res.status(400).json({ error: 'Username deja utilise' });
     }
 
+    // First registered user becomes admin
+    const userCount = await dbGet('SELECT COUNT(*) as count FROM users');
+    const role = userCount.count === 0 ? 'admin' : 'user';
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await dbRun(
-        'INSERT INTO users (username, password) VALUES (?, ?)',
-        [username, hashedPassword]
+        'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+        [username, hashedPassword, role]
     );
 
-    const token = jwt.sign({ id: result.lastID, username }, CONFIG.JWT_SECRET, { expiresIn: CONFIG.AUTH.TOKEN_EXPIRY });
+    const token = jwt.sign({ id: result.lastID, username, role }, CONFIG.JWT_SECRET, { expiresIn: CONFIG.AUTH.TOKEN_EXPIRY });
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // Ensure it works on localhost http
         maxAge: CONFIG.AUTH.COOKIE_MAX_AGE,
         sameSite: 'lax',
         path: '/'
@@ -55,11 +59,11 @@ exports.login = async (req, res) => {
         return res.status(401).json({ error: 'Identifiants invalides' });
     }
 
-    const token = jwt.sign({ id: user.id, username: user.username }, CONFIG.JWT_SECRET, { expiresIn: CONFIG.AUTH.TOKEN_EXPIRY });
+    const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, CONFIG.JWT_SECRET, { expiresIn: CONFIG.AUTH.TOKEN_EXPIRY });
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // Ensure it works on localhost http
         maxAge: CONFIG.AUTH.COOKIE_MAX_AGE,
         sameSite: 'lax',
         path: '/'
@@ -74,7 +78,8 @@ exports.login = async (req, res) => {
             total_wins: user.total_wins,
             current_streak: user.current_streak,
             max_streak: user.max_streak,
-            total_words_found: user.total_words_found
+            total_words_found: user.total_words_found,
+            role: user.role
         },
         message: 'Connexion reussie !'
     });
@@ -91,7 +96,7 @@ exports.getMe = async (req, res) => {
     }
 
     const user = await dbGet(
-        'SELECT id, username, total_games, total_wins, current_streak, max_streak, total_words_found FROM users WHERE id = ?',
+        'SELECT id, username, role, total_games, total_wins, current_streak, max_streak, total_words_found FROM users WHERE id = ?',
         [req.user.id]
     );
 

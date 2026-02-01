@@ -53,6 +53,10 @@ export class API {
         return this.request('/auth/me');
     }
 
+    static deleteMessage(id) {
+        return this.request(`/chat/delete/${id}`, { method: 'DELETE' });
+    }
+
     // Game
     static startGame() {
         return this.request('/game/start', { method: 'POST' });
