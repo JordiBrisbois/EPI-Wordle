@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Database (exclude active data)
+database/*.db
+database/*.sqlite
+database/*.db-wal
+database/*.db-shm
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# System
+.DS_Store
+Thumbs.db
