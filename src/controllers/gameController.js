@@ -12,7 +12,8 @@ exports.startGame = async (req, res) => {
     // Clean up old anonymous games or old games for this user?
     // For now, just create new.
 
-    const word = await dbGet('SELECT word, normalized FROM words WHERE is_active = 1 ORDER BY RANDOM() LIMIT 1');
+    const word = await dbGet('SELECT word, normalized FROM words WHERE is_active = 1 AND is_solution = 1 ORDER BY RANDOM() LIMIT 1');
+
 
     if (!word) {
         return res.status(500).json({ error: 'Aucun mot disponible' });
